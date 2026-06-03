@@ -40,12 +40,35 @@ Set the required environment variables in Netlify under
 ## Required Environment
 
 - `TAVILY_API_KEY`: Tavily Search API key.
+- `PINECONE_API_KEY`: Pinecone API key.
+- `PINECONE_HOST`: Pinecone index host for an index with integrated embedding enabled.
 
-Optional knobs include `TAVILY_MAX_RESULTS`.
+Optional knobs include `TAVILY_MAX_RESULTS`, `PINECONE_NAMESPACE`, `PINECONE_TEXT_FIELD`, and `PINECONE_API_VERSION`.
 
 ## Flow
 
 1. The Nitro API route searches Tavily for fresh web context.
-2. It returns Tavily's generated answer when one is available.
-3. If Tavily does not provide a direct answer, it returns a short fallback built from top source snippets.
-4. The API returns the answer and Tavily sources to the UI.
+2. It stores every Tavily source in Pinecone, linked to the original `user_query` and a stable `query_id`.
+3. It returns Tavily's generated answer when one is available.
+4. If Tavily does not provide a direct answer, it returns a short fallback built from top source snippets.
+5. The API returns the answer and Tavily sources to the UI.
+
+## Pinecone Storage
+
+The app uses Pinecone's integrated embedding upsert endpoint:
+
+```text
+POST /records/namespaces/{namespace}/upsert
+```
+
+Each Tavily source is stored as a text record. The text field defaults to `text`, but you can change it with `PINECONE_TEXT_FIELD` to match your index `field_map`.
+
+Each record includes metadata linking it back to the user prompt:
+
+- `user_query`
+- `query_id`
+- `source_rank`
+- `source_title`
+- `source_url`
+- `source_type`
+- `queried_at`
