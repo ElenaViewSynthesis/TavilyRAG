@@ -24,6 +24,17 @@ npm run build
 npm start
 ```
 
+## Netlify Deployment
+
+This project includes `netlify.toml` with the Nuxt build settings:
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Node version: `22`
+
+Set the required environment variables in Netlify under
+`Site configuration -> Environment variables` before deploying. Do not commit real API keys.
+
 ## Required Environment
 
 - `OPENAI_API_KEY`: chat and embeddings provider key.
