@@ -18,19 +18,16 @@ interface ChatResponse {
   answer: string;
   sources: Source[];
   diagnostics: {
-    pineconeMatches: number;
     tavilyResults: number;
-    namespace: string;
+    provider: "tavily";
   };
 }
 
 interface HealthResponse {
   ok: boolean;
   configured: {
-    openai: boolean;
     tavily: boolean;
-    pinecone: boolean;
-    namespace: string;
+    provider: "tavily";
   };
 }
 
@@ -46,22 +43,20 @@ const prompt = ref("");
 const isLoading = ref(false);
 const sources = ref<Source[]>([]);
 const configured = ref<HealthResponse["configured"]>({
-  openai: false,
   tavily: false,
-  pinecone: false,
-  namespace: "rag-dashboard"
+  provider: "tavily"
 });
 const messages = ref<ChatHistoryMessage[]>([
   {
     role: "assistant",
-    content: "Enter a prompt and I will combine Pinecone retrieval with Tavily search before answering."
+    content: "Enter a prompt and I will search Tavily before answering."
   }
 ]);
 const messageList = ref<HTMLElement | null>(null);
 
 const history = computed(() =>
   messages.value
-    .filter((message) => message.content !== "Searching Tavily and querying Pinecone...")
+    .filter((message) => message.content !== "Searching Tavily...")
     .map((message) => ({
       role: message.role,
       content: message.content
@@ -103,7 +98,7 @@ async function submitPrompt() {
 
   const loadingMessage: ChatHistoryMessage = {
     role: "assistant",
-    content: "Searching Tavily and querying Pinecone..."
+    content: "Searching Tavily..."
   };
   messages.value.push(loadingMessage);
 
@@ -134,7 +129,14 @@ function submitOnEnter(event: KeyboardEvent) {
 
 function getErrorMessage(error: unknown) {
   const fetchError = error as FetchErrorLike;
-  return fetchError.data?.error || fetchError.data?.message || fetchError.message || "Request failed";
+  const dataError = fetchError.data?.error;
+  const dataMessage = fetchError.data?.message;
+
+  if (typeof dataError === "string") return dataError;
+  if (typeof dataMessage === "string") return dataMessage;
+  if (typeof fetchError.message === "string") return fetchError.message;
+
+  return "Request failed";
 }
 
 function renderMarkdown(value: string) {
@@ -171,14 +173,6 @@ function escapeHtml(value: string) {
 
         <div class="status-list">
           <div class="status-row">
-            <span class="status-dot" :class="{ ready: configured.openai }"></span>
-            <span>LLM</span>
-          </div>
-          <div class="status-row">
-            <span class="status-dot" :class="{ ready: configured.pinecone }"></span>
-            <span>Pinecone</span>
-          </div>
-          <div class="status-row">
             <span class="status-dot" :class="{ ready: configured.tavily }"></span>
             <span>Tavily</span>
           </div>
@@ -188,7 +182,7 @@ function escapeHtml(value: string) {
           <h2>Sources</h2>
           <div class="source-list">
             <p v-if="sources.length === 0" class="muted">
-              Ask a question to retrieve Pinecone memory and live web results.
+              Ask a question to retrieve live web results.
             </p>
             <article v-for="source in sources" :key="`${source.number}-${source.url || source.title}`" class="source-card">
               <a v-if="source.url" :href="source.url" target="_blank" rel="noreferrer">
