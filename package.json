@@ -1,5 +1,5 @@
 {
-  "name": "tavily-pinecone-rag-dashboard",
+  "name": "tavily-rag-dashboard",
   "version": "1.0.0",
   "private": true,
   "type": "module",
