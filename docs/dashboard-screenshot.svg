@@ -1,0 +1,92 @@
+<svg width="1854" height="890" viewBox="0 0 1854 890" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Tavily RAG dashboard screenshot</title>
+  <desc id="desc">Search-grounded chat dashboard with Tavily and Pinecone status, source cards, suggested prompts, and real-time answer examples.</desc>
+  <rect width="1854" height="890" fill="#FBFCFA"/>
+  <rect x="0.5" y="7.5" width="1853" height="882" fill="#FBFCFA" stroke="#D9DFD7"/>
+  <rect x="0" y="8" width="314" height="882" fill="#EDF1EB"/>
+  <line x1="313.5" y1="8" x2="313.5" y2="890" stroke="#D9DFD7"/>
+
+  <text x="22" y="49" fill="#005F52" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800">RAG CONSOLE</text>
+  <text x="22" y="86" fill="#101815" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800">Search-grounded</text>
+  <text x="22" y="116" fill="#101815" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800">chat</text>
+
+  <circle cx="27" cy="158" r="5" fill="#0E7C68"/>
+  <text x="42" y="163" fill="#667068" font-family="Inter, Arial, sans-serif" font-size="14">Tavily</text>
+  <circle cx="27" cy="187" r="5" fill="#0E7C68"/>
+  <text x="42" y="192" fill="#667068" font-family="Inter, Arial, sans-serif" font-size="14">Pinecone</text>
+
+  <text x="22" y="239" fill="#101815" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800">Sources</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="22" y="255" width="258" height="81" rx="7" fill="white" stroke="#D9DFD7"/>
+    <text x="36" y="282" fill="#005F52" font-size="13" font-weight="800">[1] Anthropic closes in on $30 billion</text>
+    <text x="36" y="299" fill="#005F52" font-size="13" font-weight="800">fundraising round</text>
+    <text x="36" y="322" fill="#667068" font-size="12">tavily</text>
+
+    <rect x="22" y="347" width="258" height="82" rx="7" fill="white" stroke="#D9DFD7"/>
+    <text x="36" y="374" fill="#005F52" font-size="13" font-weight="800">[2] Anthropic - 2026 Funding Rounds</text>
+    <text x="36" y="391" fill="#005F52" font-size="13" font-weight="800">&amp; List of Investors - Tracxn</text>
+    <text x="36" y="414" fill="#667068" font-size="12">tavily</text>
+
+    <rect x="22" y="440" width="258" height="98" rx="7" fill="white" stroke="#D9DFD7"/>
+    <text x="36" y="467" fill="#005F52" font-size="13" font-weight="800">[3] Anthropic reportedly valued</text>
+    <text x="36" y="484" fill="#005F52" font-size="13" font-weight="800">around $380B after new funding</text>
+    <text x="36" y="501" fill="#005F52" font-size="13" font-weight="800">round</text>
+    <text x="36" y="524" fill="#667068" font-size="12">tavily</text>
+
+    <rect x="22" y="549" width="258" height="81" rx="7" fill="white" stroke="#D9DFD7"/>
+    <text x="36" y="576" fill="#005F52" font-size="13" font-weight="800">[4] Anthropic raises $13B Series F at</text>
+    <text x="36" y="593" fill="#005F52" font-size="13" font-weight="800">$183B post-money valuation</text>
+    <text x="36" y="616" fill="#667068" font-size="12">tavily</text>
+
+    <rect x="22" y="641" width="258" height="98" rx="7" fill="white" stroke="#D9DFD7"/>
+    <text x="36" y="668" fill="#005F52" font-size="13" font-weight="800">[5] Anthropic raises $30 billion in</text>
+    <text x="36" y="685" fill="#005F52" font-size="13" font-weight="800">Series G funding at $380 billion post-</text>
+    <text x="36" y="702" fill="#005F52" font-size="13" font-weight="800">money valuation \ Anthropic</text>
+    <text x="36" y="725" fill="#667068" font-size="12">tavily</text>
+  </g>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="346" y="40" width="40" height="40" rx="8" fill="#0E7C68"/>
+    <text x="360" y="66" fill="white" font-size="12" font-weight="800">AI</text>
+    <rect x="398" y="40.5" width="760" height="59" rx="7.5" fill="white" stroke="#D9DFD7"/>
+    <text x="417" y="76" fill="#101815" font-size="16">Enter a prompt and I will search Tavily before answering.</text>
+
+    <rect x="1020" y="117.5" width="759" height="59" rx="7.5" fill="#EEF2F8" stroke="#D9DFD7"/>
+    <text x="1039" y="153" fill="#101815" font-size="16">What's the Nebius stock today?</text>
+    <rect x="1792" y="117" width="40" height="40" rx="8" fill="#2D3545"/>
+    <text x="1798" y="142" fill="white" font-size="12" font-weight="800">You</text>
+
+    <rect x="346" y="195" width="40" height="40" rx="8" fill="#0E7C68"/>
+    <text x="360" y="221" fill="white" font-size="12" font-weight="800">AI</text>
+    <rect x="398" y="195.5" width="760" height="83" rx="7.5" fill="white" stroke="#D9DFD7"/>
+    <text x="417" y="231" fill="#101815" font-size="16">Nebius Class A (NBIS) is trading at $260.58 today, according to Google Featured Answer. The pre-</text>
+    <text x="417" y="256" fill="#101815" font-size="16">market price is $260.49, and the stock has a market capitalization of $65.52 billion.</text>
+
+    <rect x="1020" y="297.5" width="759" height="58" rx="7.5" fill="#EEF2F8" stroke="#D9DFD7"/>
+    <text x="1039" y="333" fill="#101815" font-size="16">Anthropic latest funding round</text>
+    <rect x="1792" y="297" width="40" height="40" rx="8" fill="#2D3545"/>
+    <text x="1798" y="322" fill="white" font-size="12" font-weight="800">You</text>
+
+    <rect x="346" y="374" width="40" height="40" rx="8" fill="#0E7C68"/>
+    <text x="360" y="400" fill="white" font-size="12" font-weight="800">AI</text>
+    <rect x="398" y="374.5" width="760" height="110" rx="7.5" fill="white" stroke="#D9DFD7"/>
+    <text x="417" y="424" fill="#101815" font-size="16">Anthropic has raised $65 billion in Series H funding, valuing the company at $965 billion. This round</text>
+    <text x="417" y="454" fill="#101815" font-size="16">was led by Altimeter Capital, Dragoneer, Greenoaks, and Sequoia Capital. The latest round follows</text>
+    <text x="417" y="479" fill="#101815" font-size="16">previous significant funding rounds, including a $30 billion Series G round.</text>
+  </g>
+
+  <line x1="313" y1="745.5" x2="1854" y2="745.5" stroke="#D9DFD7"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="332" y="765" width="218" height="36" rx="7" fill="#DFF4EE" stroke="#C6E5DA"/>
+    <text x="345" y="789" fill="#005F52" font-size="13" font-weight="800">What's the Nebius stock today?</text>
+    <rect x="559" y="765" width="215" height="36" rx="7" fill="#DFF4EE" stroke="#C6E5DA"/>
+    <text x="572" y="789" fill="#005F52" font-size="13" font-weight="800">Anthropic latest funding round</text>
+    <rect x="783" y="765" width="370" height="36" rx="7" fill="#DFF4EE" stroke="#C6E5DA"/>
+    <text x="796" y="789" fill="#005F52" font-size="13" font-weight="800">What are the latest npm vulnerabilities in agent plugins?</text>
+
+    <rect x="332" y="813.5" width="1454" height="72" rx="7.5" fill="#FBFCFA" stroke="#D9DFD7"/>
+    <text x="349" y="845" fill="#667068" font-size="16">Ask about a company, document topic, current event, or research question</text>
+    <rect x="1798" y="813" width="48" height="52" rx="8" fill="#69B7A7"/>
+    <path d="M1813 845.5L1829 838L1813 830.5L1815 836.5L1823 838L1815 839.5L1813 845.5Z" fill="white"/>
+  </g>
+</svg>
