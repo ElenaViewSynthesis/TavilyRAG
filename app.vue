@@ -19,7 +19,9 @@ interface ChatResponse {
   sources: Source[];
   diagnostics: {
     tavilyResults: number;
+    pineconeStored: number;
     provider: "tavily";
+    namespace: string;
   };
 }
 
@@ -27,6 +29,8 @@ interface HealthResponse {
   ok: boolean;
   configured: {
     tavily: boolean;
+    pinecone: boolean;
+    namespace: string;
     provider: "tavily";
   };
 }
@@ -42,8 +46,15 @@ interface FetchErrorLike {
 const prompt = ref("");
 const isLoading = ref(false);
 const sources = ref<Source[]>([]);
+const suggestedPrompts = [
+  "What's the Nebius stock today?",
+  "Anthropic latest funding round",
+  "What are the latest npm vulnerabilities in agent plugins?"
+];
 const configured = ref<HealthResponse["configured"]>({
   tavily: false,
+  pinecone: false,
+  namespace: "rag-dashboard-resources",
   provider: "tavily"
 });
 const messages = ref<ChatHistoryMessage[]>([
@@ -120,6 +131,13 @@ async function submitPrompt() {
   }
 }
 
+async function submitSuggestedPrompt(suggestion: string) {
+  if (isLoading.value) return;
+
+  prompt.value = suggestion;
+  await submitPrompt();
+}
+
 function submitOnEnter(event: KeyboardEvent) {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
@@ -176,6 +194,10 @@ function escapeHtml(value: string) {
             <span class="status-dot" :class="{ ready: configured.tavily }"></span>
             <span>Tavily</span>
           </div>
+          <div class="status-row">
+            <span class="status-dot" :class="{ ready: configured.pinecone }"></span>
+            <span>Pinecone</span>
+          </div>
         </div>
 
         <div class="source-panel">
@@ -209,6 +231,18 @@ function escapeHtml(value: string) {
         </div>
 
         <form class="composer" @submit.prevent="submitPrompt">
+          <div class="prompt-suggestions" aria-label="Suggested prompts">
+            <button
+              v-for="suggestion in suggestedPrompts"
+              :key="suggestion"
+              class="prompt-chip"
+              type="button"
+              :disabled="isLoading"
+              @click="submitSuggestedPrompt(suggestion)"
+            >
+              {{ suggestion }}
+            </button>
+          </div>
           <label for="promptInput" class="sr-only">Prompt</label>
           <textarea
             id="promptInput"
