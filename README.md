@@ -1,17 +1,19 @@
-# Tavily + Pinecone RAG Dashboard
+# Tavily RAG Dashboard
 
-A Nuxt.js + TypeScript dashboard that accepts prompts, queries Pinecone for vector memory, searches the web with Tavily, and sends both context sets to an OpenAI-compatible chat model.
+A Nuxt.js + TypeScript dashboard that accepts prompts, searches the web with Tavily, and returns Tavily's generated answer with source links.
 
 ## Setup
 
 1. Copy `.env.example` to `.env` and fill in the keys.
-2. Create or choose a Pinecone dense-vector index whose dimension matches `OPENAI_EMBEDDING_MODEL`.
-   The default `text-embedding-3-small` embedding size is 1536.
-3. Set `PINECONE_HOST` to the index data-plane host, including `https://`.
-4. Start the app:
+2. Install JavaScript dependencies:
 
 ```bash
 npm install
+```
+
+3. Start the app:
+
+```bash
 npm run dev
 ```
 
@@ -37,17 +39,13 @@ Set the required environment variables in Netlify under
 
 ## Required Environment
 
-- `OPENAI_API_KEY`: chat and embeddings provider key.
 - `TAVILY_API_KEY`: Tavily Search API key.
-- `PINECONE_API_KEY`: Pinecone API key.
-- `PINECONE_HOST`: Pinecone index host.
 
-Optional knobs include `OPENAI_CHAT_MODEL`, `OPENAI_EMBEDDING_MODEL`, `PINECONE_NAMESPACE`, `PINECONE_TOP_K`, and `TAVILY_MAX_RESULTS`.
+Optional knobs include `TAVILY_MAX_RESULTS`.
 
 ## Flow
 
-1. The Nitro API route embeds the user prompt.
-2. It queries Pinecone with that vector.
-3. It searches Tavily for fresh web context.
-4. It asynchronously embeds and upserts Tavily results into Pinecone for future recall.
-5. It sends the combined context to the chat model and returns sources to the UI.
+1. The Nitro API route searches Tavily for fresh web context.
+2. It returns Tavily's generated answer when one is available.
+3. If Tavily does not provide a direct answer, it returns a short fallback built from top source snippets.
+4. The API returns the answer and Tavily sources to the UI.
