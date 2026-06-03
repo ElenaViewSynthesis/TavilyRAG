@@ -2,6 +2,20 @@
 
 A Nuxt.js + TypeScript dashboard that accepts prompts, searches the web with Tavily, and returns Tavily's generated answer with source links.
 
+## Live Demo
+
+Try the deployed dashboard at <https://tavily-rag-dashboard-20260603.netlify.app/>.
+
+[![Tavily RAG Dashboard screenshot showing suggested prompts and Tavily web results](docs/dashboard-screenshot.svg)](https://tavily-rag-dashboard-20260603.netlify.app/)
+
+## Suggested Prompts
+
+Use the prompt chips to fetch real-time web data through Tavily:
+
+- `What's the Nebius stock today?`
+- `Anthropic latest funding round`
+- `What are the latest npm vulnerabilities in agent plugins?`
+
 ## Setup
 
 1. Copy `.env.example` to `.env` and fill in the keys.
