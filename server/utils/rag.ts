@@ -3,6 +3,11 @@ import type { H3Event } from "h3";
 interface RagConfig {
   tavilyKey?: string;
   tavilyMaxResults: number;
+  pineconeKey?: string;
+  pineconeHost: string;
+  pineconeNamespace: string;
+  pineconeTextField: string;
+  pineconeApiVersion: string;
 }
 
 interface ChatRequest {
@@ -40,7 +45,9 @@ interface ChatSuccess {
   sources: Source[];
   diagnostics: {
     tavilyResults: number;
+    pineconeStored: number;
     provider: "tavily";
+    namespace: string;
   };
 }
 
@@ -72,6 +79,7 @@ export async function handleChat(event: H3Event): Promise<ChatSuccess | ChatFail
 
   const tavily = await searchTavily(prompt, config);
   const tavilyDocuments = normalizeTavilyResults(tavily);
+  const pineconeStored = await storeResourcesInPinecone(prompt, tavilyDocuments, config);
   const answer = buildTavilyAnswer(tavily, tavilyDocuments);
 
   return {
@@ -79,7 +87,9 @@ export async function handleChat(event: H3Event): Promise<ChatSuccess | ChatFail
     sources: tavilyDocuments.map((doc, index) => sourceFromTavily(doc, index + 1)),
     diagnostics: {
       tavilyResults: tavilyDocuments.length,
-      provider: "tavily"
+      pineconeStored,
+      provider: "tavily",
+      namespace: config.pineconeNamespace
     }
   };
 }
@@ -89,6 +99,8 @@ export function getConfigStatus() {
 
   return {
     tavily: Boolean(config.tavilyKey),
+    pinecone: Boolean(config.pineconeKey && config.pineconeHost),
+    namespace: config.pineconeNamespace,
     provider: "tavily"
   };
 }
@@ -104,7 +116,12 @@ export function toPublicErrorMessage(error: unknown) {
 function getConfig(): RagConfig {
   return {
     tavilyKey: process.env.TAVILY_API_KEY,
-    tavilyMaxResults: Number(process.env.TAVILY_MAX_RESULTS || 5)
+    tavilyMaxResults: Number(process.env.TAVILY_MAX_RESULTS || 5),
+    pineconeKey: process.env.PINECONE_API_KEY,
+    pineconeHost: stripTrailingSlash(process.env.PINECONE_HOST || ""),
+    pineconeNamespace: process.env.PINECONE_NAMESPACE || "rag-dashboard-resources",
+    pineconeTextField: process.env.PINECONE_TEXT_FIELD || "text",
+    pineconeApiVersion: process.env.PINECONE_API_VERSION || "2026-04"
   };
 }
 
@@ -162,6 +179,43 @@ function sourceFromTavily(doc: TavilyDocument, number: number): Source {
   };
 }
 
+async function storeResourcesInPinecone(
+  userQuery: string,
+  documents: TavilyDocument[],
+  config: RagConfig
+) {
+  if (!documents.length) return 0;
+
+  const queryId = stableId(userQuery);
+  const queriedAt = new Date().toISOString();
+  const records = documents.map((doc, index) => {
+    const id = `${queryId}-source-${index + 1}-${stableId(doc.url || doc.title)}`;
+
+    return {
+      _id: id,
+      [config.pineconeTextField]: truncate(`${doc.title}\n${doc.content}`, 6000),
+      user_query: truncate(userQuery, 2000),
+      query_id: queryId,
+      source_rank: index + 1,
+      source_title: truncate(doc.title, 500),
+      source_url: doc.url,
+      source_type: "tavily",
+      queried_at: queriedAt
+    };
+  });
+
+  await apiFetch(
+    `${config.pineconeHost}/records/namespaces/${encodeURIComponent(config.pineconeNamespace)}/upsert`,
+    {
+      method: "POST",
+      headers: pineconeRecordHeaders(config),
+      body: records.map((record) => JSON.stringify(record)).join("\n")
+    }
+  );
+
+  return records.length;
+}
+
 async function apiFetch<T = unknown>(url: string, options: RequestInit): Promise<T> {
   const response = await fetch(url, options);
   const text = await response.text();
@@ -180,9 +234,25 @@ async function apiFetch<T = unknown>(url: string, options: RequestInit): Promise
 }
 
 function getMissingConfig(config: RagConfig) {
-  return [["TAVILY_API_KEY", config.tavilyKey]]
+  return [
+    ["TAVILY_API_KEY", config.tavilyKey],
+    ["PINECONE_API_KEY", config.pineconeKey],
+    ["PINECONE_HOST", config.pineconeHost]
+  ]
     .filter(([, value]) => !value)
     .map(([key]) => key);
+}
+
+function pineconeRecordHeaders(config: RagConfig) {
+  return {
+    "Content-Type": "application/x-ndjson",
+    "Api-Key": config.pineconeKey || "",
+    "X-Pinecone-Api-Version": config.pineconeApiVersion
+  };
+}
+
+function stripTrailingSlash(value: string) {
+  return value.replace(/\/$/, "");
 }
 
 function truncate(value: string, maxLength: number) {
@@ -206,6 +276,7 @@ function parseJson(value: string) {
 
 function getServiceName(url: string) {
   if (url.includes("api.tavily.com")) return "Tavily";
+  if (url.includes("pinecone.io")) return "Pinecone";
   return "External API";
 }
 
@@ -214,4 +285,14 @@ function sanitizeErrorMessage(value: string) {
     .replace(/sk-\S+/g, "[redacted API key]")
     .replace(/tvly-\S+/g, "[redacted Tavily key]")
     .replace(/pcsk_\S+/g, "[redacted API key]");
+}
+
+function stableId(input: string) {
+  let hash = 5381;
+
+  for (let index = 0; index < input.length; index += 1) {
+    hash = (hash * 33) ^ input.charCodeAt(index);
+  }
+
+  return (hash >>> 0).toString(16);
 }
