@@ -224,6 +224,34 @@ h2 {
   background: white;
 }
 
+.prompt-suggestions {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prompt-chip {
+  width: auto;
+  min-height: 36px;
+  height: auto;
+  padding: 8px 12px;
+  place-items: center;
+  border: 1px solid var(--line);
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.prompt-chip:hover {
+  color: white;
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+}
+
 textarea {
   width: 100%;
   min-height: 52px;
